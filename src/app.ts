@@ -1,91 +1,78 @@
-import { TodoComponent } from './components/page/item/todo.js';
-import { NoteComponent } from './components/page/item/note.js';
-import { VideoComponent } from './components/page/item/video.js';
-import { ImageComponent } from './components/page/item/image.js';
-import { Composable, PageComponent, PageItemComponent } from './components/page/page.js';
-import { Component } from './components/Component.js';
-import { InputDialog } from './components/dialog/dialog.js';
-import { MediaSectionInput } from './components/dialog/input/media-input.js';
-import { TextSectionInput } from './components/dialog/input/text-input.js';
+import { TodoComponent } from "./components/page/item/todo.js";
+import { NoteComponent } from "./components/page/item/note.js";
+import { VideoComponent } from "./components/page/item/video.js";
+import { ImageComponent } from "./components/page/item/image.js";
+import {
+  Composable,
+  PageComponent,
+  PageItemComponent,
+} from "./components/page/page.js";
+import { Component } from "./components/Component.js";
+import {
+  InputDialog,
+  MediaData,
+  TextData,
+} from "./components/dialog/dialog.js";
+import { MediaSectionInput } from "./components/dialog/input/media-input.js";
+import { TextSectionInput } from "./components/dialog/input/text-input.js";
 
-class App{
-    private readonly page: Component & Composable;
-    constructor(appRoot: HTMLElement,dialogRoot:HTMLElement) {
-        this.page = new PageComponent(PageItemComponent);
-        this.page.attachTo(appRoot);
+type InputComponentConstructor<T = (MediaData | TextData) & Component> = {
+  new (): T;
+};
+class App {
+  private readonly page: Component & Composable;
+  constructor(appRoot: HTMLElement, private dialogRoot: HTMLElement) {
+    this.page = new PageComponent(PageItemComponent);
+    this.page.attachTo(appRoot);
 
-        const imageBtn = document.querySelector('#new-image')! as HTMLElement;
-        imageBtn.addEventListener('click',()=>{
-            const dialog = new InputDialog();
-            const inputSection = new MediaSectionInput();
-            dialog.addChild(inputSection);
-            dialog.attachTo(dialogRoot);
-            dialog.setOnCloseListener(()=>{
-                dialog.removeFrom(dialogRoot);
-            })
-            dialog.setOnSubmitListener(()=>{
-                //섹션을 만들어서 페이지에 추가해준다
-                 const image = new ImageComponent(inputSection.title,inputSection.url);
-                 this.page.addChild(image);
-                
-                dialog.removeFrom(dialogRoot);
-            })
-        })
+    this.bindElementDialog<MediaSectionInput>(
+      "#new-image",
+      MediaSectionInput,
+      (input: MediaSectionInput) => new ImageComponent(input.title, input.url)
+    );
 
-        const videoBtn = document.querySelector('#new-video')! as HTMLElement;
-        videoBtn.addEventListener('click',()=>{
-            const dialog = new InputDialog();
-            const inputSection = new MediaSectionInput();
-            dialog.addChild(inputSection);
-            dialog.attachTo(dialogRoot);
-            dialog.setOnCloseListener(()=>{
-                dialog.removeFrom(dialogRoot);
-            })
-            dialog.setOnSubmitListener(()=>{
-                //섹션을 만들어서 페이지에 추가해준다
-                 const image = new VideoComponent(inputSection.title,inputSection.url);
-                 this.page.addChild(image);
-                
-                dialog.removeFrom(dialogRoot);
-            })
-        })
+    this.bindElementDialog<MediaSectionInput>(
+      "#new-video",
+      MediaSectionInput,
+      (input: MediaSectionInput) => new VideoComponent(input.title, input.url)
+    );
 
-        const noteBtn = document.querySelector('#new-note')! as HTMLElement;
-        noteBtn.addEventListener('click',()=>{
-            const dialog = new InputDialog();
-            const inputSection = new TextSectionInput();
-            dialog.addChild(inputSection);
-            dialog.attachTo(dialogRoot);
-            dialog.setOnCloseListener(()=>{
-                dialog.removeFrom(dialogRoot);
-            })
-            dialog.setOnSubmitListener(()=>{
-                //섹션을 만들어서 페이지에 추가해준다
-                 const image = new NoteComponent(inputSection.title,inputSection.body);
-                 this.page.addChild(image);
-                
-                dialog.removeFrom(dialogRoot);
-            })
-        })
+    this.bindElementDialog<TextSectionInput>(
+      "#new-note",
+      TextSectionInput,
+      (input: TextSectionInput) => new NoteComponent(input.title, input.body)
+    );
 
-        const todoBtn = document.querySelector('#new-todo')! as HTMLElement;
-        todoBtn.addEventListener('click',()=>{
-            const dialog = new InputDialog();
-            const inputSection = new TextSectionInput();
-            dialog.addChild(inputSection);
-            dialog.attachTo(dialogRoot);
-            dialog.setOnCloseListener(()=>{
-                dialog.removeFrom(dialogRoot);
-            })
-            dialog.setOnSubmitListener(()=>{
-                //섹션을 만들어서 페이지에 추가해준다
-                 const image = new TodoComponent(inputSection.title,inputSection.body);
-                 this.page.addChild(image);
-                
-                dialog.removeFrom(dialogRoot);
-            })
-        })
-    }
+    this.bindElementDialog<TextSectionInput>(
+      "#new-todo",
+      TextSectionInput,
+      (input: TextSectionInput) => new TodoComponent(input.title, input.body)
+    );
+  }
+
+  private bindElementDialog<T extends (MediaData | TextData) & Component>(
+    selector: string,
+    InputComponent: InputComponentConstructor<T>,
+    makeSection: (input: T) => Component
+  ) {
+    const element = document.querySelector(selector)! as HTMLElement;
+    element.addEventListener("click", () => {
+      const dialog = new InputDialog();
+      const input = new InputComponent();
+      dialog.addChild(input);
+      dialog.attachTo(this.dialogRoot);
+      dialog.setOnCloseListener(() => {
+        dialog.removeFrom(this.dialogRoot);
+      });
+      dialog.setOnSubmitListener(() => {
+        //섹션을 만들어서 페이지에 추가해준다
+        const image = makeSection(input);
+        this.page.addChild(image);
+
+        dialog.removeFrom(this.dialogRoot);
+      });
+    });
+  }
 }
 
-new App(document.querySelector('.document')! as HTMLElement,document.body);
+new App(document.querySelector(".document")! as HTMLElement, document.body);
