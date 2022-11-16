@@ -1,31 +1,71 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Motion</title>
-    <link rel="stylesheet" href="./style/style.css">
+    <link rel="stylesheet" href="./style/style.css" />
     <script type="module" src="./dist/app.js" defer></script>
-</head>
-<body>
+  </head>
+  <body>
     <div class="app">
-        <header class="banner">
-            <h1 class="banner__title">Motion</h1>
-            <ul class="control-panel">
-                <li><button id="new-image" class="create-button">Image</button></li>
-                <li><button id="new-video" class="create-button">Video</button></li>
-                <li><button id="new-note" class="create-button">Note</button></li>
-                <li><button id="new-todo" class="create-button">Todo</button></li>
-            </ul>
-        </header>
-        <main class="document"></main>
-        <footer class="footer">
-            <P> Copyright by Dream Coding Academy. All rigths reserved</P>
-        </footer>
+      <header class="banner">
+        <h1 class="banner__title">Motion</h1>
+        <div class="control-main">
+          <button id="new-color" class="change-main">colorPicker</button>
+        </div>
+        <ul class="control-panel">
+          <li><button id="new-image" class="create-button">Image</button></li>
+          <li><button id="new-video" class="create-button">Video</button></li>
+          <li><button id="new-note" class="create-button">Note</button></li>
+          <li><button id="new-todo" class="create-button">Todo</button></li>
+        </ul>
+      </header>
+      <main class="document"></main>
+      <footer class="footer">
+        <p>Copyright by Dream Coding Academy. All rigths reserved</p>
+      </footer>
+      <a href="https://www.flaticon.com/free-icons/check" title="check icons"
+        >Check icons created by Maxim Basinski Premium - Flaticon</a
+      >
     </div>
-</body>
+  </body>
 </html>
-
-
-
+<!-- <section class="dialog">
+  <div class="dialog__container">
+    <button class="close">&times;</button>
+    <div id="dialog__body">
+      <section class="image">
+        <div class="image_holder">
+          <div
+            alt="#1abc9c"
+            shape="poly"
+            style="background-color: #1abc9c; width: 20px; height: 20px"
+          ></div>
+          <div
+            alt="#16a085"
+            shape="poly"
+            style="background-color: #16a085; width: 20px; height: 20px"
+          ></div>
+          <div
+            alt="#2ecc71"
+            shape="poly"
+            style="background-color: #16a085; width: 20px; height: 20px"
+          ></div>
+          <div
+            alt="#3498db"
+            shape="poly"
+            style="background-color: #16a085; width: 20px; height: 20px"
+          ></div>
+          <div
+            alt="#16a085"
+            shape="poly"
+            style="background-color: #16a085; width: 20px; height: 20px"
+          ></div>
+        </div>
+      </section>
+    </div>
+    <button class="dialog__submit">ADD</button>
+  </div>
+</section> -->

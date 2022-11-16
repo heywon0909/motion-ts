@@ -223,3 +223,37 @@ image__holder {
   padding: 1em;
   color: var(--smokywhite);
 }
+.control-main {
+  display: flex;
+  justify-content: end;
+}
+.change-main {
+  margin: 0.1em 0.2em;
+  text-align: center;
+  user-select: none;
+  padding: 1em 3em;
+  text-transform: uppercase;
+  font-weight: 600;
+  font-size: 0.8rem;
+  color: white;
+  background-color: var(--accent-color);
+  border-color: var(--accent-color);
+  border-radius: 2px;
+}
+.color_holder {
+  display: flex;
+  justify-content: space-between;
+}
+.color_holder div {
+  margin: 0 auto;
+  width: 20px;
+  height: 20px;
+  background-size: contain;
+}
+.add {
+  background-image: url(../assets/check.png);
+  background-size: contain;
+}
+.none {
+  background-image: none;
+}

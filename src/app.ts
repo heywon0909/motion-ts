@@ -15,6 +15,7 @@ import {
 } from "./components/dialog/dialog.js";
 import { MediaSectionInput } from "./components/dialog/input/media-input.js";
 import { TextSectionInput } from "./components/dialog/input/text-input.js";
+import { ColorPickerComponent } from "./components/page/color/colorPicker.js";
 
 type InputComponentConstructor<T = (MediaData | TextData) & Component> = {
   new (): T;
@@ -24,6 +25,21 @@ class App {
   constructor(appRoot: HTMLElement, private dialogRoot: HTMLElement) {
     this.page = new PageComponent(PageItemComponent);
     this.page.attachTo(appRoot);
+
+    const colorBtn = document.querySelector("#new-color")! as HTMLElement;
+    let elemArr: HTMLElement[] = [
+      document.querySelector("header")! as HTMLElement,
+      document.querySelector("footer")! as HTMLElement,
+    ];
+    colorBtn.addEventListener("click", () => {
+      const dialog = new InputDialog();
+      const color = new ColorPickerComponent(elemArr);
+      dialog.addChild(color);
+      dialog.attachTo(dialogRoot);
+      dialog.setOnCloseListener(() => {
+        dialog.removeFrom(this.dialogRoot);
+      });
+    });
 
     this.bindElementDialog<MediaSectionInput>(
       "#new-image",
