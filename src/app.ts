@@ -39,6 +39,10 @@ class App {
       dialog.setOnCloseListener(() => {
         dialog.removeFrom(this.dialogRoot);
       });
+      dialog.setOnSubmitListener(() => {
+        color.changeSetting();
+        dialog.removeFrom(this.dialogRoot);
+      });
     });
 
     this.bindElementDialog<MediaSectionInput>(

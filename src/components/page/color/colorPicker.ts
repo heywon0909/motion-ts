@@ -1,7 +1,7 @@
 import { BaseComponent } from "../../Component.js";
 export interface Picker {
   onHoverSetting(element: HTMLElement): void;
-  changeSetting(selector: HTMLElement): void;
+  changeSetting(): void;
 }
 export class ColorPickerComponent
   extends BaseComponent<HTMLElement>
@@ -125,7 +125,6 @@ export class ColorPickerComponent
     this.palette.forEach((item) => {
       //   console.log("item", item);
       item.addEventListener("click", () => {
-        console.log("타니");
         const find = elementList.filter((item) =>
           item.classList.contains("add")
         );
@@ -134,9 +133,13 @@ export class ColorPickerComponent
       });
     });
   }
-  changeSetting(element: HTMLElement): void {
+  changeSetting(): void {
+    let selected: HTMLElement | undefined;
+    this.palette.forEach((item) => {
+      if (item.classList.contains("add")) selected = item;
+    });
     let color = window
-      .getComputedStyle(element, null)
+      .getComputedStyle(selected! as HTMLElement, null)
       .getPropertyValue("background-color");
     (this.selectors! as HTMLElement[]).forEach((elem) => {
       elem.style.backgroundColor = color;
