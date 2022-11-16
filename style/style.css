@@ -43,7 +43,7 @@ textarea {
 }
 
 body {
-  background: url("../assets/image.jpg") center/cover no-repeat;
+  background: url("../assets/bg-img.jpg") center/cover no-repeat;
   font-family: Roboto, Oxygen, sans-serif;
   display: flex;
   justify-content: center;
@@ -170,12 +170,15 @@ body {
 /* -- PAGE ITEM -- */
 .page-item {
   margin: 1.5em;
-  display: flex;
+  /* display: flex; */
   justify-content: space-between;
   align-items: center;
   box-shadow: 2px 2px 6px var(--shadow-color);
   background: var(--bg-accent-color);
   background: var(--component-bg-gradient);
+}
+.page-item__body {
+  width: 100%;
 }
 .page-item__controls {
   padding-right: 0.5em;
@@ -263,4 +266,52 @@ image__holder {
 }
 #bar {
   width: 100%;
+}
+
+/* -- title motion -- */
+@keyframes shake {
+  0% {
+    transform: translate(1px, -2px) rotate(-1deg);
+  }
+  10% {
+    transform: translate(-1px, 2px) rotate(-1deg);
+  }
+  20% {
+    transform: translate(1px, 2px) rotate(0deg);
+  }
+  30% {
+    transform: translate(3px, 2px) rotate(0deg);
+  }
+  40% {
+    transform: translate(1px, -1px) rotate(1deg);
+  }
+  50% {
+    transform: translate(-1px, -2px) rotate(-1deg);
+  }
+  60% {
+    transform: translate(-3px, 1px) rotate(0deg);
+  }
+  70% {
+    transform: translate(3px, 1px) rotate(-1deg);
+  }
+  80% {
+    transform: translate(-1px, -1px) rotate(1deg);
+  }
+  90% {
+    transform: translate(-3px, 0px) rotate(1deg);
+  }
+  100% {
+    transform: translate(1px, 1px) rotate(0deg);
+  }
+}
+.banner>.banner__title:hover{
+  animation: shake 0.5s infinite;
+}
+
+.control_btn{
+  float: right;
+}
+.create_control_btn{
+  padding: 1em;
+  font-size: 0.4rem;
 }

@@ -1,7 +1,7 @@
 
 export interface Component{
     attachTo(parent: HTMLElement, position?: InsertPosition): void;
-    removeFrom(parent:HTMLElement):void;
+    removeFrom(parent: HTMLElement): void;
 }
 /**
  * Encapsulate the HTML element creation
@@ -13,6 +13,7 @@ export class BaseComponent<T extends HTMLElement> implements Component{
         template.innerHTML = htmlString;
         this.element = template.content.firstElementChild! as T;
     }
+    
     attachTo(parent: HTMLElement, position: InsertPosition ='afterbegin') {
         parent.insertAdjacentElement(position, this.element);
     }

@@ -16,6 +16,7 @@ import {
 import { MediaSectionInput } from "./components/dialog/input/media-input.js";
 import { TextSectionInput } from "./components/dialog/input/text-input.js";
 import { ColorPickerComponent } from "./components/page/color/colorPicker.js";
+import { ButtonComponent } from './components/page/button/button.js';
 
 type InputComponentConstructor<T = (MediaData | TextData) & Component> = {
   new (): T;
@@ -86,10 +87,12 @@ class App {
       });
       dialog.setOnSubmitListener(() => {
         //섹션을 만들어서 페이지에 추가해준다
-        const image = makeSection(input);
-        this.page.addChild(image);
-
-        dialog.removeFrom(this.dialogRoot);
+        const elem = makeSection(input);
+        const colorBtn = new ButtonComponent('color');
+        this.page.addChild(elem,colorBtn);
+       
+      
+         dialog.removeFrom(this.dialogRoot);
       });
     });
   }
