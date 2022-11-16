@@ -1,7 +1,8 @@
 :root {
   --bg-main-color: #00000080;
   --bg-accent-color: #2d2d2d;
-  --accent-color: #f64435;
+  --accent-color: #ffffff;
+  --bg-btn-color: #272d3c;
   --text-accent-color: #ffe498;
   --text-edit-bg-color: #575757;
   --border-color: #3f3f3f;
@@ -87,7 +88,7 @@ body {
   font-weight: 600;
   font-size: 0.8rem;
   color: white;
-  background-color: var(--accent-color);
+  background-color: var(--bg-btn-color);
   border-color: var(--accent-color);
   border-radius: 2px;
 }
@@ -236,10 +237,11 @@ image__holder {
   font-weight: 600;
   font-size: 0.8rem;
   color: white;
-  background-color: var(--accent-color);
+  background-color: var(--bg-btn-color);
   border-color: var(--accent-color);
   border-radius: 2px;
 }
+/* -- color picker -- */
 .color_holder {
   display: flex;
   justify-content: space-between;
@@ -254,6 +256,11 @@ image__holder {
   background-image: url(../assets/check.png);
   background-size: contain;
 }
-.none {
-  background-image: none;
+
+.control_holder {
+  width: 100%;
+  display: flex;
+}
+#bar {
+  width: 100%;
 }
