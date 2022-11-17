@@ -142,6 +142,7 @@ export class ColorPickerComponent
       .getComputedStyle(selected! as HTMLElement, null)
       .getPropertyValue("background-color");
     (this.selectors! as HTMLElement[]).forEach((elem) => {
+      console.log("elem", elem);
       elem.style.backgroundColor = color;
     });
   }

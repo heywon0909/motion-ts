@@ -16,11 +16,12 @@ import {
 import { MediaSectionInput } from "./components/dialog/input/media-input.js";
 import { TextSectionInput } from "./components/dialog/input/text-input.js";
 import { ColorPickerComponent } from "./components/page/color/colorPicker.js";
-import { ButtonComponent } from "./components/page/button/button.js";
+import { Button, ButtonComponent } from "./components/page/button/button.js";
 
 type InputComponentConstructor<T = (MediaData | TextData) & Component> = {
   new (): T;
 };
+
 class App {
   private readonly page: Component & Composable;
   constructor(appRoot: HTMLElement, private dialogRoot: HTMLElement) {
@@ -70,7 +71,29 @@ class App {
       (input: TextSectionInput) => new TodoComponent(input.title, input.body)
     );
   }
-
+  // PICKER 버튼 넣기
+  private bindPickerBtn<T extends Component & Button>(
+    pageAttachableComponent: Component,
+    AttachblePickerButton: T,
+    root: HTMLElement
+  ) {
+    const button = AttachblePickerButton;
+    this.page.addChild(pageAttachableComponent, button);
+    button.setOnModalListener(() => {
+      const picker_dialog = new InputDialog();
+      console.log("root", root);
+      const color = new ColorPickerComponent([root]);
+      picker_dialog.addChild(color);
+      picker_dialog.attachTo(this.dialogRoot);
+      picker_dialog.setOnCloseListener(() => {
+        picker_dialog.removeFrom(this.dialogRoot);
+      });
+      picker_dialog.setOnSubmitListener(() => {
+        color.changeSetting();
+        picker_dialog.removeFrom(this.dialogRoot);
+      });
+    });
+  }
   private bindElementDialog<T extends (MediaData | TextData) & Component>(
     selector: string,
     InputComponent: InputComponentConstructor<T>,
@@ -88,21 +111,23 @@ class App {
       dialog.setOnSubmitListener(() => {
         //섹션을 만들어서 페이지에 추가해준다
         const elem = makeSection(input);
+        console.log("elem", elem.rootElement);
         const colorBtn = new ButtonComponent("color");
-        this.page.addChild(elem, colorBtn);
-        colorBtn.setOnModalListener(() => {
-          const picker_dialog = new InputDialog();
-          const color = new ColorPickerComponent([elem.rootElement]);
-          picker_dialog.addChild(color);
-          picker_dialog.attachTo(this.dialogRoot);
-          picker_dialog.setOnCloseListener(() => {
-            picker_dialog.removeFrom(this.dialogRoot);
-          });
-          picker_dialog.setOnSubmitListener(() => {
-            color.changeSetting();
-            picker_dialog.removeFrom(this.dialogRoot);
-          });
-        });
+        this.bindPickerBtn<ButtonComponent>(elem, colorBtn, elem.rootElement);
+        // this.page.addChild(elem, colorBtn);
+        // colorBtn.setOnModalListener(() => {
+        //   const picker_dialog = new InputDialog();
+        //   const color = new ColorPickerComponent([elem.rootElement]);
+        //   picker_dialog.addChild(color);
+        //   picker_dialog.attachTo(this.dialogRoot);
+        //   picker_dialog.setOnCloseListener(() => {
+        //     picker_dialog.removeFrom(this.dialogRoot);
+        //   });
+        //   picker_dialog.setOnSubmitListener(() => {
+        //     color.changeSetting();
+        //     picker_dialog.removeFrom(this.dialogRoot);
+        //   });
+        // });
         dialog.removeFrom(this.dialogRoot);
       });
     });
