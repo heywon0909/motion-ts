@@ -19,9 +19,7 @@ export class TransparentControlPicker
       </section>`);
     const plus_btn = this.element.querySelector(".create-button.plus");
     const minus_btn = this.element.querySelector(".create-button.minus");
-    console.log("this.bar", this.bar);
 
-    console.log("selectors", this.selectors);
     this.initSetting();
     plus_btn?.addEventListener("click", () => {
       this.controlBarState(10);

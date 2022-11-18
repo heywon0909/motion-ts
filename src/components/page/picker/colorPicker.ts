@@ -131,7 +131,7 @@ export class ColorPickerComponent
           item.classList.contains("add")
         );
         console.log("find", find);
-        console.log("item-backgroundColor", item.style.backgroundColor);
+
         this.onHoverSetting(item);
         this.changeSetting();
       });
@@ -165,7 +165,6 @@ export class ColorPickerComponent
 
   private initSetting(): void {
     (this.selectors! as HTMLElement[]).forEach((elem) => {
-      console.log("elem", elem.style.backgroundColor);
       if (elem.style.backgroundColor) {
         this.palette.forEach((item) => {
           if (item.style.backgroundColor === elem.style.backgroundColor) {

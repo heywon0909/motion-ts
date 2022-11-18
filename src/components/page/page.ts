@@ -31,7 +31,6 @@ export class PageItemComponent
     const container = this.element.querySelector(
       ".page-item__body"
     )! as HTMLElement;
-    console.log("btn", btn);
 
     (btn! as Component[]).forEach((elem) => {
       elem.attachTo(this.element.querySelector(".control_btn")! as HTMLElement);
@@ -52,7 +51,7 @@ export class PageComponent
   }
   addChild(section: Component, btn?: Component) {
     const item = new this.pageItemConstructor();
-    console.log("btn1", btn);
+
     item.addChild(section, btn);
     item.attachTo(this.element, "beforeend");
     item.setOnCloseListener(() => {
