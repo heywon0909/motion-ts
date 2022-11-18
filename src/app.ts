@@ -15,13 +15,17 @@ import {
 } from "./components/dialog/dialog.js";
 import { MediaSectionInput } from "./components/dialog/input/media-input.js";
 import { TextSectionInput } from "./components/dialog/input/text-input.js";
-import { ColorPickerComponent } from "./components/page/picker/colorPicker.js";
+import {
+  ColorPickerComponent,
+  Picker,
+} from "./components/page/picker/colorPicker.js";
 import { Button, ButtonComponent } from "./components/page/button/button.js";
+import { TransparentControlPicker } from "./components/page/picker/transparentPicker.js";
 
 type InputComponentConstructor<T = (MediaData | TextData) & Component> = {
   new (): T;
 };
-
+type PastePickerConstructor<T = Component & Picker> = T[];
 class App {
   private readonly page: Component & Composable;
   constructor(appRoot: HTMLElement, private dialogRoot: HTMLElement) {
@@ -74,25 +78,29 @@ class App {
   // PICKER 버튼 넣기
   private bindPickerBtn<T extends Component & Button>(
     pageAttachableComponent: Component,
-    AttachblePickerButton: T[],
-    root: HTMLElement
+    AttachblePickerButton: T,
+    makePicker: () => PastePickerConstructor
   ) {
-    const buttonArr = AttachblePickerButton;
-    this.page.addChild(pageAttachableComponent, buttonArr);
-    buttonArr.forEach((button) => {
-      button.setOnModalListener(() => {
-        const picker_dialog = new InputDialog();
+    const settingBtn = AttachblePickerButton;
+    this.page.addChild(pageAttachableComponent, settingBtn);
+    settingBtn.setOnModalListener(() => {
+      const picker_dialog = new InputDialog();
 
-        const color = new ColorPickerComponent([root]);
-        picker_dialog.addChild(color);
-        picker_dialog.attachTo(this.dialogRoot);
-        picker_dialog.setOnCloseListener(() => {
-          picker_dialog.removeFrom(this.dialogRoot);
+      const pickerItems = makePicker();
+
+      picker_dialog.attachTo(this.dialogRoot);
+      picker_dialog.addChild(...pickerItems);
+      picker_dialog.setOnCloseListener(() => {
+        pickerItems.forEach((picker) => {
+          picker.unbindChange();
         });
-        picker_dialog.setOnSubmitListener(() => {
-          color.changeSetting();
-          picker_dialog.removeFrom(this.dialogRoot);
+        picker_dialog.removeFrom(this.dialogRoot);
+      });
+      picker_dialog.setOnSubmitListener(() => {
+        pickerItems.forEach((picker) => {
+          picker.changeSetting();
         });
+        picker_dialog.removeFrom(this.dialogRoot);
       });
     });
   }
@@ -114,9 +122,16 @@ class App {
         //섹션을 만들어서 페이지에 추가해준다
         const elem = makeSection(input);
 
-        const colorBtn = new ButtonComponent("color");
+        const settingBtn = new ButtonComponent("setting");
 
-        this.bindPickerBtn<ButtonComponent>(elem, [colorBtn], elem.rootElement);
+        // const array: PastePickerConstructor = [
+        //   new ColorPickerComponent([elem.rootElement]),
+        //   new TransparentControlPicker([elem.rootElement]),
+        // ];
+        this.bindPickerBtn<ButtonComponent>(elem, settingBtn, () => [
+          new ColorPickerComponent([elem.rootElement]),
+          new TransparentControlPicker([elem.rootElement]),
+        ]);
         // this.page.addChild(elem, colorBtn);
         // colorBtn.setOnModalListener(() => {
         //   const picker_dialog = new InputDialog();

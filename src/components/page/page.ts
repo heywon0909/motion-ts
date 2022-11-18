@@ -7,7 +7,7 @@ type SectionContainerConstructor = {
   new (): SectionContainer;
 };
 export interface Composable {
-  addChild(child: Component, btn?: Component[]): void;
+  addChild(child: Component, btn?: Component): void;
 }
 export class PageItemComponent
   extends BaseComponent<HTMLElement>
@@ -27,12 +27,13 @@ export class PageItemComponent
       this.closeListener && this.closeListener();
     };
   }
-  addChild(child: Component, btn?: Component[]) {
+  addChild(child: Component, ...btn: Component[]) {
     const container = this.element.querySelector(
       ".page-item__body"
     )! as HTMLElement;
     console.log("btn", btn);
-    btn?.forEach((elem) => {
+
+    (btn! as Component[]).forEach((elem) => {
       elem.attachTo(this.element.querySelector(".control_btn")! as HTMLElement);
     });
 
@@ -49,7 +50,7 @@ export class PageComponent
   constructor(private pageItemConstructor: SectionContainerConstructor) {
     super('<ul class="page"></ul>');
   }
-  addChild(section: Component, btn?: Component[]) {
+  addChild(section: Component, btn?: Component) {
     const item = new this.pageItemConstructor();
     console.log("btn1", btn);
     item.addChild(section, btn);

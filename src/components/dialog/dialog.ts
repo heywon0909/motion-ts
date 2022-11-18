@@ -44,8 +44,10 @@ export class InputDialog
   setOnSubmitListener(listener: OnSubmitListener) {
     this.submitListener = listener;
   }
-  addChild(child: Component) {
+  addChild(...children: Component[]) {
     const body = this.element.querySelector("#dialog__body")! as HTMLElement;
-    child.attachTo(body);
+    children.forEach((child) => {
+      child.attachTo(body);
+    });
   }
 }

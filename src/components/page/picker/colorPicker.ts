@@ -2,6 +2,7 @@ import { BaseComponent } from "../../Component.js";
 export interface Picker {
   onHoverSetting(element: HTMLElement): void;
   changeSetting(): void;
+  unbindChange(): void;
 }
 export class ColorPickerComponent
   extends BaseComponent<HTMLElement>
@@ -130,7 +131,14 @@ export class ColorPickerComponent
         );
         console.log("find", find);
         this.onHoverSetting(item);
+        this.changeSetting();
       });
+    });
+  }
+  unbindChange(): void {
+    (this.selectors! as HTMLElement[]).forEach((elem) => {
+      console.log("elem", elem);
+      elem.style.backgroundColor = "rgba(0, 0, 0, 0)";
     });
   }
   changeSetting(): void {
