@@ -85,7 +85,6 @@ class App {
     const settingBtn = AttachblePickerButton;
     this.page.addChild(pageAttachableComponent, settingBtn);
     settingBtn.setOnModalListener(() => {
-      console.log("타니");
       const picker_dialog = new InputDialog();
 
       const pickerItems = makePicker();
