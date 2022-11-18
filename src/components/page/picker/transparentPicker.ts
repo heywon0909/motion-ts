@@ -7,12 +7,12 @@ export class TransparentControlPicker
 {
   private bar: HTMLFormElement = this.element.querySelector(
     "#bar"
-  ) as HTMLFormElement;
+  )! as HTMLFormElement;
   private barValue: number = 100;
   constructor(private selectors?: HTMLElement[]) {
     super(`<section class="control">
         <div class="control_holder">
-          <progress id="bar"></progress>
+          <input type="range" id="bar"></progress>
           <button class="create-button plus">+</button>
           <button class="create-button minus">-</button>
         </div>
@@ -20,9 +20,9 @@ export class TransparentControlPicker
     const plus_btn = this.element.querySelector(".create-button.plus");
     const minus_btn = this.element.querySelector(".create-button.minus");
     console.log("this.bar", this.bar);
-    this.bar.max = 100;
-    this.bar.value = 100;
+
     console.log("selectors", this.selectors);
+    this.initSetting();
     plus_btn?.addEventListener("click", () => {
       this.controlBarState(10);
       this.changeSetting();
@@ -31,6 +31,7 @@ export class TransparentControlPicker
       this.controlBarState(-10);
       this.changeSetting();
     });
+    this.onHoverSetting(this.bar);
   }
   unbindChange(): void {
     this.barValue = 0;
@@ -40,8 +41,10 @@ export class TransparentControlPicker
     });
   }
   onHoverSetting(element: HTMLElement): void {
-    console.log("element", element);
-    throw new Error("Method not implemented.");
+    element!.addEventListener("change", () => {
+      this.barValue = (element! as HTMLFormElement).value;
+      this.changeSetting();
+    });
   }
   controlBarState(num: number): void {
     if (this.barValue < 0) {
@@ -54,9 +57,19 @@ export class TransparentControlPicker
     }
     this.barValue += num;
   }
+  private initSetting(): void {
+    (this.selectors! as HTMLElement[]).forEach((elem) => {
+      this.bar.max = 100;
+      if (Number(elem.style.opacity) === 0) {
+        this.bar.value = 100;
+      } else {
+        this.barValue = Number(elem.style.opacity) * 100;
+        this.bar.value = Number(elem.style.opacity) * 100;
+      }
+    });
+  }
   changeSetting(): void {
     this.bar.value = this.barValue;
-    console.log("this.bar", this.barValue);
     (this.selectors! as HTMLElement[]).forEach((elem) => {
       elem.style.opacity = (this.bar.value / 100).toString();
     });
