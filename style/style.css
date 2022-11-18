@@ -322,3 +322,7 @@ image__holder {
 .create-button.minus {
   padding: 0.01em 0.3em;
 }
+
+.dialog__container.alert__container {
+  height: 90px;
+}
