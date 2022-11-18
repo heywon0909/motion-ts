@@ -43,6 +43,7 @@ class App {
       dialog.addChild(color);
       dialog.attachTo(dialogRoot);
       dialog.setOnCloseListener(() => {
+        color.unbindChange();
         dialog.removeFrom(this.dialogRoot);
       });
       dialog.setOnSubmitListener(() => {
