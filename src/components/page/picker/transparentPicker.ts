@@ -8,7 +8,7 @@ export class TransparentControlPicker
   private bar: HTMLFormElement = this.element.querySelector(
     "#bar"
   ) as HTMLFormElement;
-  private barValue: number = 0;
+  private barValue: number = 100;
   constructor(private selectors?: HTMLElement[]) {
     super(`<section class="control">
         <div class="control_holder">
@@ -21,7 +21,7 @@ export class TransparentControlPicker
     const minus_btn = this.element.querySelector(".create-button.minus");
     console.log("this.bar", this.bar);
     this.bar.max = 100;
-    this.bar.value = 0;
+    this.bar.value = 100;
     console.log("selectors", this.selectors);
     plus_btn?.addEventListener("click", () => {
       this.controlBarState(10);
@@ -58,7 +58,7 @@ export class TransparentControlPicker
     this.bar.value = this.barValue;
     console.log("this.bar", this.barValue);
     (this.selectors! as HTMLElement[]).forEach((elem) => {
-      elem.style.opacity = this.bar.value;
+      elem.style.opacity = (this.bar.value / 100).toString();
     });
   }
 }
