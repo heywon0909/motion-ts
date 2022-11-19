@@ -1,4 +1,5 @@
 import { BaseComponent } from "../../Component.js";
+import { AlertDialog } from "../../dialog/dialog.js";
 export interface Picker {
   onHoverSetting(element: HTMLElement): void;
   changeSetting(): void;
@@ -11,7 +12,7 @@ export class ColorPickerComponent
   private palette = this.element.querySelectorAll(
     "div.color_holder div"
   )! as NodeListOf<HTMLElement>;
-  constructor(private selectors?: HTMLElement[]) {
+  constructor(private selectors: HTMLElement[]) {
     super(`
         <section class="color">
           <div class="color_holder">
@@ -143,17 +144,29 @@ export class ColorPickerComponent
     });
   }
   changeSetting(): void {
+    console.log('타니니니니')
     let selected: HTMLElement | undefined;
-    this.palette.forEach((item) => {
-      if (item.classList.contains("add")) selected = item;
-    });
-    let color = window
+    const colorPalette: HTMLElement[] = Array.from(this.palette);
+    selected = colorPalette.find(item=>item.classList.contains('add'));
+  
+   if(selected != undefined){
+      let color = window
       .getComputedStyle(selected! as HTMLElement, null)
       .getPropertyValue("background-color");
 
     (this.selectors! as HTMLElement[]).forEach((elem) => {
       elem.style.backgroundColor = color;
     });
+   }else{
+     this.unbindChange();
+     const alert = new AlertDialog('색상을 지정해주세요!');
+     alert.attachTo(document.body);
+     alert.setOnCloseListener(()=> alert.removeFrom(document.body));
+     
+     
+     
+   }
+   
   }
   checkHover(elements: NodeListOf<HTMLElement>, selector: HTMLElement) {
     elements.forEach((elem) => {

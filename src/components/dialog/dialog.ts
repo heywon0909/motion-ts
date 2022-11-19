@@ -55,37 +55,28 @@ export class InputDialog
 
 export class AlertDialog
   extends BaseComponent<HTMLElement>
-  implements Composable
 {
   closeListener?: OnCloseListener;
-  submitListener?: OnSubmitListener;
-  constructor() {
+  constructor(private alert_text:string) {
     super(`<section class="dialog">
         <div class="dialog__container">
-        <div id="dialog__body"></div>
+        <div id="dialog__body">
+        <img src="./assets/alert.png" style="width:40px;text-align:center" class="alert__icon"/>
+        <p></p>
+        </div>
         </div>
     </section>`);
-    const closeBtn = this.element.querySelector(".close")! as HTMLElement;
-    closeBtn.onclick = () => {
-      this.closeListener && this.closeListener();
-    };
-    const submitBtn = this.element.querySelector(
-      ".dialog__submit"
-    )! as HTMLElement;
-    submitBtn.onclick = () => {
-      this.submitListener && this.submitListener();
-    };
+    const text =this.element.querySelector('#dialog__body p')! as HTMLElement;
+    text.innerHTML = this.alert_text;
+      
   }
   setOnCloseListener(listener: OnCloseListener) {
     this.closeListener = listener;
+    setTimeout(()=>{
+      (this.closeListener! as OnCloseListener)();
+    },3000);
+    
   }
-  setOnSubmitListener(listener: OnSubmitListener) {
-    this.submitListener = listener;
-  }
-  addChild(...children: Component[]) {
-    const body = this.element.querySelector("#dialog__body")! as HTMLElement;
-    children.forEach((child) => {
-      child.attachTo(body);
-    });
-  }
+ 
+  
 }

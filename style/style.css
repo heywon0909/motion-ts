@@ -326,3 +326,10 @@ image__holder {
 .dialog__container.alert__container {
   height: 90px;
 }
+
+.alert__icon{
+  width: 40px;
+  height: 40px;
+  margin-top: 10px;
+  text-align: center;
+}
