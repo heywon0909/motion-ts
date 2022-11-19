@@ -9,6 +9,7 @@ import {
 } from "./components/page/page.js";
 import { Component } from "./components/Component.js";
 import {
+    AlertDialog,
   InputDialog,
   MediaData,
   TextData,
@@ -97,11 +98,27 @@ class App {
         });
         picker_dialog.removeFrom(this.dialogRoot);
       });
+     
       picker_dialog.setOnSubmitListener(() => {
+        let alert:string[] = []; 
         pickerItems.forEach((picker) => {
-          picker.changeSetting();
+         const change =picker.changeSetting();
+        if(change!=undefined){
+            alert.push(change! as string);  
+        }
         });
-        picker_dialog.removeFrom(this.dialogRoot);
+       
+        if(alert[0]==undefined){
+            picker_dialog.removeFrom(this.dialogRoot);
+        }else{
+            const alert_dialog = new AlertDialog(alert);
+            alert_dialog.attachTo(document.body);
+            alert_dialog.setOnCloseListener(()=>{
+                alert_dialog.removeFrom(document.body);
+            })
+            alert = [];
+        }
+       
       });
     });
   }
@@ -121,7 +138,18 @@ class App {
       });
       dialog.setOnSubmitListener(() => {
         //섹션을 만들어서 페이지에 추가해준다
+        if(input.getTextError()!=undefined){
+            console.log('input',input.getTextError());
+            console.log('title',input.title);
+            const alert_dialog = new AlertDialog([input.getTextError()!]);
+            alert_dialog.attachTo(document.body);
+            alert_dialog.setOnCloseListener(()=>{
+                alert_dialog.removeFrom(document.body);
+            })
+            return;
+        }
         const elem = makeSection(input);
+        
 
         const settingBtn = new ButtonComponent("setting");
 

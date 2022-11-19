@@ -45,14 +45,6 @@ export class TransparentControlPicker
     });
   }
   controlBarState(num: number): void {
-    if (this.barValue < 0) {
-      this.barValue = 0;
-      // 경고창 만들기
-    }
-    if (this.barValue > 100) {
-      this.barValue = 100;
-      // 경고창 만들기
-    }
     this.barValue += num;
   }
   private initSetting(): void {
@@ -66,10 +58,22 @@ export class TransparentControlPicker
       }
     });
   }
-  changeSetting(): void {
+  changeSetting(): string | undefined {
+    if (this.barValue < 0) {
+      this.barValue = 0;
+      this.bar.value = this.barValue;
+      return '투명도 값은 0이상이여야합니다.'
+    }
+    if (this.barValue > 100) {
+      this.barValue = 100;
+      this.bar.value = this.barValue;
+      return '투명도 값은 100이하이여야합니다.'
+    }
+
     this.bar.value = this.barValue;
     (this.selectors! as HTMLElement[]).forEach((elem) => {
       elem.style.opacity = (this.bar.value / 100).toString();
     });
+    return;
   }
 }

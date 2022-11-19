@@ -333,3 +333,6 @@ image__holder {
   margin-top: 10px;
   text-align: center;
 }
+.dialog.alert{
+  z-index:9999;
+}

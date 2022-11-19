@@ -25,4 +25,13 @@ export class MediaSectionInput
     const element = this.element.querySelector("#url")! as HTMLInputElement;
     return element.value;
   }
+  getTextError():string | undefined{
+    if(this.url=='' && this.title==''){
+      return 'url과 title을 설정해주세요';
+    }else{
+      if(this.url=='') return 'url을 설정해주세요';
+      if(this.title=='') return 'title을 설정해주세요';
+      return '';
+    }
+  }
 }

@@ -6,10 +6,12 @@ type OnSubmitListener = () => void;
 export interface MediaData {
   readonly title: string;
   readonly url: string;
+  getTextError():string | undefined;
 }
 export interface TextData {
   readonly title: string;
   readonly body: string;
+  getTextError():string | undefined;
 }
 
 export class InputDialog
@@ -57,8 +59,8 @@ export class AlertDialog
   extends BaseComponent<HTMLElement>
 {
   closeListener?: OnCloseListener;
-  constructor(private alert_text:string) {
-    super(`<section class="dialog">
+  constructor(private alert_text: string[] | string) {
+    super(`<section class="dialog alert">
         <div class="dialog__container">
         <div id="dialog__body">
         <img src="./assets/alert.png" style="width:40px;text-align:center" class="alert__icon"/>
@@ -66,15 +68,21 @@ export class AlertDialog
         </div>
         </div>
     </section>`);
-    const text =this.element.querySelector('#dialog__body p')! as HTMLElement;
-    text.innerHTML = this.alert_text;
-      
+    const text_content =this.element.querySelector('#dialog__body p')! as HTMLElement;
+    if(Array.isArray(this.alert_text)){
+      this.alert_text.forEach(text=>{
+        text_content.innerHTML += text+'<br/>';
+      })
+    }else{
+      text_content.innerHTML = this.alert_text
+    }
+
   }
   setOnCloseListener(listener: OnCloseListener) {
     this.closeListener = listener;
     setTimeout(()=>{
       (this.closeListener! as OnCloseListener)();
-    },3000);
+    },2000);
     
   }
  

@@ -1,8 +1,7 @@
 import { BaseComponent } from "../../Component.js";
-import { AlertDialog } from "../../dialog/dialog.js";
 export interface Picker {
   onHoverSetting(element: HTMLElement): void;
-  changeSetting(): void;
+  changeSetting(): string | undefined;
   unbindChange(): void;
 }
 export class ColorPickerComponent
@@ -143,8 +142,7 @@ export class ColorPickerComponent
       elem.style.backgroundColor = "rgba(0, 0, 0, 0)";
     });
   }
-  changeSetting(): void {
-    console.log('타니니니니')
+  changeSetting(): string | undefined {
     let selected: HTMLElement | undefined;
     const colorPalette: HTMLElement[] = Array.from(this.palette);
     selected = colorPalette.find(item=>item.classList.contains('add'));
@@ -157,11 +155,10 @@ export class ColorPickerComponent
     (this.selectors! as HTMLElement[]).forEach((elem) => {
       elem.style.backgroundColor = color;
     });
+    return;
    }else{
      this.unbindChange();
-     const alert = new AlertDialog('색상을 지정해주세요!');
-     alert.attachTo(document.body);
-     alert.setOnCloseListener(()=> alert.removeFrom(document.body));
+     return '색상을 지정해주세요!'
      
      
      
