@@ -31,7 +31,7 @@ export class MediaSectionInput
     }else{
       if(this.url=='') return 'url을 설정해주세요';
       if(this.title=='') return 'title을 설정해주세요';
-      return '';
+      return undefined;
     }
   }
 }
