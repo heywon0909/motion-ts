@@ -22,6 +22,7 @@ import {
 } from "./components/page/picker/colorPicker.js";
 import { Button, ButtonComponent } from "./components/page/button/button.js";
 import { TransparentControlPicker } from "./components/page/picker/transparentPicker.js";
+import { DragAndDrop } from "./util/drag.js";
 
 type InputComponentConstructor<T = (MediaData | TextData) & Component> = {
   new (): T;
@@ -85,6 +86,9 @@ class App {
   ) {
     const settingBtn = AttachblePickerButton;
     this.page.addChild(pageAttachableComponent, settingBtn);
+    
+    const draggableItem = new DragAndDrop(document.querySelectorAll('.page-item'));
+    console.log('draggableItem',draggableItem);
     settingBtn.setOnModalListener(() => {
       const picker_dialog = new InputDialog();
 
