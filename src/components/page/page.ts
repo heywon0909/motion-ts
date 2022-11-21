@@ -1,4 +1,4 @@
-import { BaseComponent, Component } from "../Component.js";
+import { BaseComponent, Component } from "../component.js";
 type OnCloseListener = () => void;
 interface SectionContainer extends Component, Composable {
   setOnCloseListener(listener: OnCloseListener): void;

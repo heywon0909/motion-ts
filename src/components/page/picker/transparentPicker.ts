@@ -1,5 +1,5 @@
-import { BaseComponent } from "../../Component.js";
-import { Picker } from "./colorPicker";
+import { BaseComponent } from "../../component.js";
+import { Picker } from "./colorPicker.js";
 
 export class TransparentControlPicker
   extends BaseComponent<HTMLElement>
@@ -62,12 +62,12 @@ export class TransparentControlPicker
     if (this.barValue < 0) {
       this.barValue = 0;
       this.bar.value = this.barValue;
-      return '투명도 값은 0이상이여야합니다.'
+      return "투명도 값은 0이상이여야합니다.";
     }
     if (this.barValue > 100) {
       this.barValue = 100;
       this.bar.value = this.barValue;
-      return '투명도 값은 100이하이여야합니다.'
+      return "투명도 값은 100이하이여야합니다.";
     }
 
     this.bar.value = this.barValue;

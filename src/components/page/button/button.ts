@@ -1,4 +1,4 @@
-import { BaseComponent } from "./../../Component.js";
+import { BaseComponent } from "../../component.js";
 export interface Button {
   setOnModalListener(listener: OnModalListener): void;
 }

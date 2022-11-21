@@ -1,4 +1,4 @@
-import { BaseComponent } from "../../Component.js";
+import { BaseComponent } from "../../component.js";
 import { TextData } from "../dialog.js";
 
 export class TextSectionInput
@@ -25,12 +25,12 @@ export class TextSectionInput
     const element = this.element.querySelector("#body")! as HTMLInputElement;
     return element.value;
   }
-  getTextError():string | undefined{
-    if(this.body=='' && this.title==''){
-      return 'body과 title을 설정해주세요';
-    }else{
-      if(this.body=='') return 'body을 설정해주세요';
-      if(this.title=='') return 'title을 설정해주세요';
+  getTextError(): string | undefined {
+    if (this.body == "" && this.title == "") {
+      return "body과 title을 설정해주세요";
+    } else {
+      if (this.body == "") return "body을 설정해주세요";
+      if (this.title == "") return "title을 설정해주세요";
       return undefined;
     }
   }

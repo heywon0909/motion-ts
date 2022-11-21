@@ -1,4 +1,4 @@
-import { BaseComponent } from "../../Component.js";
+import { BaseComponent } from "../../component.js";
 export interface Picker {
   onHoverSetting(element: HTMLElement): void;
   changeSetting(): string | undefined;
@@ -145,25 +145,21 @@ export class ColorPickerComponent
   changeSetting(): string | undefined {
     let selected: HTMLElement | undefined;
     const colorPalette: HTMLElement[] = Array.from(this.palette);
-    selected = colorPalette.find(item=>item.classList.contains('add'));
-  
-   if(selected != undefined){
-      let color = window
-      .getComputedStyle(selected! as HTMLElement, null)
-      .getPropertyValue("background-color");
+    selected = colorPalette.find((item) => item.classList.contains("add"));
 
-    (this.selectors! as HTMLElement[]).forEach((elem) => {
-      elem.style.backgroundColor = color;
-    });
-    return;
-   }else{
-     this.unbindChange();
-     return '색상을 지정해주세요!'
-     
-     
-     
-   }
-   
+    if (selected != undefined) {
+      let color = window
+        .getComputedStyle(selected! as HTMLElement, null)
+        .getPropertyValue("background-color");
+
+      (this.selectors! as HTMLElement[]).forEach((elem) => {
+        elem.style.backgroundColor = color;
+      });
+      return;
+    } else {
+      this.unbindChange();
+      return "색상을 지정해주세요!";
+    }
   }
   checkHover(elements: NodeListOf<HTMLElement>, selector: HTMLElement) {
     elements.forEach((elem) => {

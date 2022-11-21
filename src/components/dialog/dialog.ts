@@ -1,4 +1,4 @@
-import { BaseComponent, Component } from "../Component.js";
+import { BaseComponent, Component } from "../component.js";
 import { Composable } from "../page/page.js";
 type OnCloseListener = () => void;
 type OnSubmitListener = () => void;
@@ -6,12 +6,12 @@ type OnSubmitListener = () => void;
 export interface MediaData {
   readonly title: string;
   readonly url: string;
-  getTextError():string | undefined;
+  getTextError(): string | undefined;
 }
 export interface TextData {
   readonly title: string;
   readonly body: string;
-  getTextError():string | undefined;
+  getTextError(): string | undefined;
 }
 
 export class InputDialog
@@ -55,36 +55,32 @@ export class InputDialog
   }
 }
 
-export class AlertDialog
-  extends BaseComponent<HTMLElement>
-{
+export class AlertDialog extends BaseComponent<HTMLElement> {
   closeListener?: OnCloseListener;
   constructor(private alert_text: string[] | string) {
     super(`<section class="dialog alert">
         <div class="dialog__container">
         <div id="dialog__body">
-        <img src="./assets/alert.png" style="width:40px;text-align:center" class="alert__icon"/>
+        <img class="alert__icon"/>
         <p></p>
         </div>
         </div>
     </section>`);
-    const text_content =this.element.querySelector('#dialog__body p')! as HTMLElement;
-    if(Array.isArray(this.alert_text)){
-      this.alert_text.forEach(text=>{
-        text_content.innerHTML += text+'<br/>';
-      })
-    }else{
-      text_content.innerHTML = this.alert_text
+    const text_content = this.element.querySelector(
+      "#dialog__body p"
+    )! as HTMLElement;
+    if (Array.isArray(this.alert_text)) {
+      this.alert_text.forEach((text) => {
+        text_content.innerHTML += text + "<br/>";
+      });
+    } else {
+      text_content.innerHTML = this.alert_text;
     }
-
   }
   setOnCloseListener(listener: OnCloseListener) {
     this.closeListener = listener;
-    setTimeout(()=>{
+    setTimeout(() => {
       (this.closeListener! as OnCloseListener)();
-    },2000);
-    
+    }, 2000);
   }
- 
-  
 }
