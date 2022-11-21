@@ -1,5 +1,5 @@
 import { BaseComponent } from "../../component.js";
-import { Picker } from "./colorPicker.js";
+import { Picker } from "./colorPicker";
 
 export class TransparentControlPicker
   extends BaseComponent<HTMLElement>

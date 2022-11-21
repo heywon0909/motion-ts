@@ -139,10 +139,11 @@ export class ColorPickerComponent
   }
   unbindChange(): void {
     (this.selectors! as HTMLElement[]).forEach((elem) => {
-      elem.style.backgroundColor = "rgba(0, 0, 0, 0)";
+      elem.style.background = "rgba(0, 0, 0, 0)";
     });
   }
   changeSetting(): string | undefined {
+    console.log("this.selectors", this.selectors);
     let selected: HTMLElement | undefined;
     const colorPalette: HTMLElement[] = Array.from(this.palette);
     selected = colorPalette.find((item) => item.classList.contains("add"));
@@ -153,7 +154,7 @@ export class ColorPickerComponent
         .getPropertyValue("background-color");
 
       (this.selectors! as HTMLElement[]).forEach((elem) => {
-        elem.style.backgroundColor = color;
+        elem.style.background = color;
       });
       return;
     } else {
@@ -171,9 +172,9 @@ export class ColorPickerComponent
 
   private initSetting(): void {
     (this.selectors! as HTMLElement[]).forEach((elem) => {
-      if (elem.style.backgroundColor) {
+      if (elem.style.background) {
         this.palette.forEach((item) => {
-          if (item.style.backgroundColor === elem.style.backgroundColor) {
+          if (item.style.background === elem.style.background) {
             item.classList.add("add");
           }
         });

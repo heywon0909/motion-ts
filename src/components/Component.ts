@@ -24,6 +24,6 @@ export class BaseComponent<T extends HTMLElement> implements Component {
     parent.removeChild(this.element);
   }
   get rootElement() {
-    return this.element;
+    return this.element! as HTMLElement;
   }
 }
