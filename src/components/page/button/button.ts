@@ -1,5 +1,5 @@
-import { BaseComponent } from "../../component.js";
-export interface Button {
+import { BaseComponent, Component } from "../../component.js";
+export interface Button extends Component{
   setOnModalListener(listener: OnModalListener): void;
 }
 type OnModalListener = () => void;

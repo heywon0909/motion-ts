@@ -27,7 +27,8 @@ import { TransparentControlPicker } from "./components/page/picker/transparentPi
 type InputComponentConstructor<T = (MediaData | TextData) & Component> = {
   new (): T;
 };
-type PastePickerConstructor<T = Component & Picker> = T[];
+type AttachableBtn<T extends Button> = T;
+type PastePickerConstructor<T extends Picker> = T[]|T;
 class App {
   private readonly page: Component & Composable;
   constructor(appRoot: HTMLElement, private dialogRoot: HTMLElement) {
@@ -57,25 +58,33 @@ class App {
     this.bindElementDialog<MediaSectionInput>(
       "#new-image",
       MediaSectionInput,
-      (input: MediaSectionInput) => new ImageComponent(input.title, input.url)
+      (input: MediaSectionInput) => new ImageComponent(input.title, input.url),
+      () => new ButtonComponent("setting"),
+      ()=> [ColorPickerComponent,TransparentControlPicker]
     );
 
     this.bindElementDialog<MediaSectionInput>(
       "#new-video",
       MediaSectionInput,
-      (input: MediaSectionInput) => new VideoComponent(input.title, input.url)
+      (input: MediaSectionInput) => new VideoComponent(input.title, input.url),
+      () => new ButtonComponent("setting"),
+       ()=> [ColorPickerComponent,TransparentControlPicker]
     );
 
     this.bindElementDialog<TextSectionInput>(
       "#new-note",
       TextSectionInput,
-      (input: TextSectionInput) => new NoteComponent(input.title, input.body)
+      (input: TextSectionInput) => new NoteComponent(input.title, input.body),
+      () => new ButtonComponent("setting"),
+      ()=> [ColorPickerComponent,TransparentControlPicker]
     );
 
     this.bindElementDialog<TextSectionInput>(
       "#new-todo",
       TextSectionInput,
-      (input: TextSectionInput) => new TodoComponent(input.title, input.body)
+      (input: TextSectionInput) => new TodoComponent(input.title, input.body),
+      () => new ButtonComponent("setting"),
+      ()=> [ColorPickerComponent,TransparentControlPicker]
     );
 
     // For demo :)
@@ -101,18 +110,12 @@ class App {
     this.page.addChild(new TodoComponent("Todo Title", "TypeScript Course!"));
   }
   // PICKER 버튼 넣기
-  private bindPickerBtn<T extends Component & Button>(
-    pageAttachableComponent: Component,
-    AttachblePickerButton: T,
+  private bindPickerBtn<T extends Button>(
+    AttachblePickerButton: AttachableBtn<T>,
     makePicker: () => PastePickerConstructor
   ) {
     const settingBtn = AttachblePickerButton;
-    this.page.addChild(pageAttachableComponent, settingBtn);
-
-    // const draggableItem = new DragAndDrop(
-
-    // );
-    // console.log("draggableItem", draggableItem);
+ 
     settingBtn.setOnModalListener(() => {
       const picker_dialog = new InputDialog();
 
@@ -152,7 +155,9 @@ class App {
   private bindElementDialog<T extends (MediaData | TextData) & Component>(
     selector: string,
     InputComponent: InputComponentConstructor<T>,
-    makeSection: (input: T) => Component
+    makeSection: (input: T) => Component,
+    makeFilter: () => AttachableBtn<Button>,
+    makePicker: () => PastePickerConstructor<Picker>
   ) {
     const element = document.querySelector(selector)! as HTMLElement;
     element.addEventListener("click", () => {
@@ -174,14 +179,12 @@ class App {
           return;
         }
         const elem = makeSection(input);
+        const pickerBtn = makeFilter();
+        this.page.addChild(elem, pickerBtn);
+        const pickerConstructor = makePicker();
+     
 
-        const settingBtn = new ButtonComponent("setting");
-
-        // const array: PastePickerConstructor = [
-        //   new ColorPickerComponent([elem.rootElement]),
-        //   new TransparentControlPicker([elem.rootElement]),
-        // ];
-        this.bindPickerBtn<ButtonComponent>(elem, settingBtn, () => [
+        this.bindPickerBtn<Button>(pickerBtn, () => [
           new ColorPickerComponent([elem.rootElement]),
           new TransparentControlPicker([elem.rootElement]),
         ]);

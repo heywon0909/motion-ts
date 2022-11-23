@@ -1,5 +1,6 @@
+import { Component } from './../../component';
 import { BaseComponent } from "../../component.js";
-export interface Picker {
+export interface Picker extends Component{
   onHoverSetting(element: HTMLElement): void;
   changeSetting(): string | undefined;
   unbindChange(): void;
