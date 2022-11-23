@@ -22,7 +22,7 @@ import {
 } from "./components/page/picker/colorPicker.js";
 import { Button, ButtonComponent } from "./components/page/button/button.js";
 import { TransparentControlPicker } from "./components/page/picker/transparentPicker.js";
-import { DragAndDrop } from "./util/drag.js";
+// import { DragAndDrop } from "./util/drag.js";
 
 type InputComponentConstructor<T = (MediaData | TextData) & Component> = {
   new (): T;
@@ -77,6 +77,28 @@ class App {
       TextSectionInput,
       (input: TextSectionInput) => new TodoComponent(input.title, input.body)
     );
+
+    // For demo :)
+    this.page.addChild(
+      new ImageComponent("Image Title", "https://picsum.photos/800/400")
+    );
+    this.page.addChild(
+      new VideoComponent("Video Title", "https://youtu.be/D7cwvvA7cP0")
+    );
+    this.page.addChild(
+      new NoteComponent("Note Title", "Don't forget to code your dream")
+    );
+    this.page.addChild(new TodoComponent("Todo Title", "TypeScript Course!"));
+    this.page.addChild(
+      new ImageComponent("Image Title", "https://picsum.photos/800/400")
+    );
+    this.page.addChild(
+      new VideoComponent("Video Title", "https://youtu.be/D7cwvvA7cP0")
+    );
+    this.page.addChild(
+      new NoteComponent("Note Title", "Don't forget to code your dream")
+    );
+    this.page.addChild(new TodoComponent("Todo Title", "TypeScript Course!"));
   }
   // PICKER 버튼 넣기
   private bindPickerBtn<T extends Component & Button>(
@@ -87,10 +109,10 @@ class App {
     const settingBtn = AttachblePickerButton;
     this.page.addChild(pageAttachableComponent, settingBtn);
 
-    const draggableItem = new DragAndDrop(
-      document.querySelectorAll(".page-item")
-    );
-    console.log("draggableItem", draggableItem);
+    // const draggableItem = new DragAndDrop(
+
+    // );
+    // console.log("draggableItem", draggableItem);
     settingBtn.setOnModalListener(() => {
       const picker_dialog = new InputDialog();
 
@@ -144,8 +166,6 @@ class App {
       dialog.setOnSubmitListener(() => {
         //섹션을 만들어서 페이지에 추가해준다
         if (input.getTextError() != undefined) {
-          console.log("input", input.getTextError());
-          console.log("title", input.title);
           const alert_dialog = new AlertDialog([input.getTextError()!]);
           alert_dialog.attachTo(document.body);
           alert_dialog.setOnCloseListener(() => {

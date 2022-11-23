@@ -1,6 +1,7 @@
 export interface Component {
   attachTo(parent: HTMLElement, position?: InsertPosition): void;
   removeFrom(parent: HTMLElement): void;
+  attach(component: Component, position?: InsertPosition): void;
   readonly rootElement: HTMLElement;
 }
 /**
@@ -13,7 +14,9 @@ export class BaseComponent<T extends HTMLElement> implements Component {
     template.innerHTML = htmlString;
     this.element = template.content.firstElementChild! as T;
   }
-
+  attach(component: Component, position?: InsertPosition) {
+    component.attachTo(this.element, position);
+  }
   attachTo(parent: HTMLElement, position: InsertPosition = "afterbegin") {
     parent.insertAdjacentElement(position, this.element);
   }
@@ -24,6 +27,6 @@ export class BaseComponent<T extends HTMLElement> implements Component {
     parent.removeChild(this.element);
   }
   get rootElement() {
-    return this.element! as HTMLElement;
+    return (this.element! as HTMLElement).closest(".page-item")! as HTMLElement;
   }
 }
