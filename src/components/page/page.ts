@@ -118,7 +118,7 @@ export class PageComponent
 
     if (this.dragTarget && this.dragTarget !== this.dropTarget) {
       this.dragTarget.removeFrom(this.element);
-      this.dropTarget.attach(this.dragTarget, "afterend");
+      this.dropTarget.attach(this.dragTarget, "beforebegin");
     }
   }
   addChild(section: Component, btn?: Component) {
