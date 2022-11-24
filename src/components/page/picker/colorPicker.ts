@@ -1,18 +1,21 @@
-import { Component } from './../../component';
+import { Component } from "./../../component";
 import { BaseComponent } from "../../component.js";
-export interface Picker extends Component{
+export interface Picker extends Component {
   onHoverSetting(element: HTMLElement): void;
   changeSetting(): string | undefined;
   unbindChange(): void;
+  get changableTarget(): HTMLElement[];
+  set changableTarget(list: HTMLElement[]);
 }
 export class ColorPickerComponent
   extends BaseComponent<HTMLElement>
   implements Picker
 {
+  private selectors?: HTMLElement[];
   private palette = this.element.querySelectorAll(
     "div.color_holder div"
   )! as NodeListOf<HTMLElement>;
-  constructor(private selectors: HTMLElement[]) {
+  constructor() {
     super(`
         <section class="color">
           <div class="color_holder">
@@ -123,28 +126,27 @@ export class ColorPickerComponent
         </section>
       `);
 
-    const elementList: HTMLElement[] = Array.from(this.palette);
-    this.initSetting();
     this.palette.forEach((item) => {
       //   console.log("item", item);
       item.addEventListener("click", () => {
-        const find = elementList.filter((item) =>
-          item.classList.contains("add")
-        );
-        console.log("find", find);
-
         this.onHoverSetting(item);
         this.changeSetting();
       });
     });
   }
+  set changableTarget(list: HTMLElement[]) {
+    this.selectors = list;
+  }
+  get changableTarget() {
+    return this.selectors! as HTMLElement[];
+  }
   unbindChange(): void {
     (this.selectors! as HTMLElement[]).forEach((elem) => {
-      elem.style.background = "rgba(0, 0, 0, 0)";
+      elem.style.removeProperty("background");
     });
+    this.checkHover(this.palette);
   }
   changeSetting(): string | undefined {
-    console.log("this.selectors", this.selectors);
     let selected: HTMLElement | undefined;
     const colorPalette: HTMLElement[] = Array.from(this.palette);
     selected = colorPalette.find((item) => item.classList.contains("add"));
@@ -163,22 +165,14 @@ export class ColorPickerComponent
       return "색상을 지정해주세요!";
     }
   }
-  checkHover(elements: NodeListOf<HTMLElement>, selector: HTMLElement) {
+  checkHover(elements: NodeListOf<HTMLElement>, selector?: HTMLElement) {
     elements.forEach((elem) => {
-      if (elem !== selector && elem.classList.contains("add")) {
+      if (selector == null && elem.classList.contains("add")) {
         elem.classList.remove("add");
-      }
-    });
-  }
-
-  private initSetting(): void {
-    (this.selectors! as HTMLElement[]).forEach((elem) => {
-      if (elem.style.background) {
-        this.palette.forEach((item) => {
-          if (item.style.background === elem.style.background) {
-            item.classList.add("add");
-          }
-        });
+      } else {
+        if (elem !== selector && elem.classList.contains("add")) {
+          elem.classList.remove("add");
+        }
       }
     });
   }

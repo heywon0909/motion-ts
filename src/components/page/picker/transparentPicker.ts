@@ -5,11 +5,12 @@ export class TransparentControlPicker
   extends BaseComponent<HTMLElement>
   implements Picker
 {
+  private selectors?: HTMLElement[];
   private bar: HTMLFormElement = this.element.querySelector(
     "#bar"
   )! as HTMLFormElement;
   private barValue: number = 100;
-  constructor(private selectors?: HTMLElement[]) {
+  constructor() {
     super(`<section class="control">
         <div class="control_holder">
           <input type="range" id="bar"></progress>
@@ -19,8 +20,7 @@ export class TransparentControlPicker
       </section>`);
     const plus_btn = this.element.querySelector(".create-button.plus");
     const minus_btn = this.element.querySelector(".create-button.minus");
-
-    this.initSetting();
+    this.bar.value = 100;
     plus_btn?.addEventListener("click", () => {
       this.controlBarState(10);
       this.changeSetting();
@@ -31,11 +31,17 @@ export class TransparentControlPicker
     });
     this.onHoverSetting(this.bar);
   }
+  set changableTarget(list: HTMLElement[]) {
+    this.selectors = list;
+  }
+  get changableTarget() {
+    return this.selectors! as HTMLElement[];
+  }
   unbindChange(): void {
-    this.barValue = 0;
-    this.bar.value = 0;
+    this.barValue = 100;
+    this.bar.value = 100;
     (this.selectors! as HTMLElement[]).forEach((elem) => {
-      elem.style.opacity = "0";
+      elem.style.opacity = "unset";
     });
   }
   onHoverSetting(element: HTMLElement): void {
@@ -46,17 +52,6 @@ export class TransparentControlPicker
   }
   controlBarState(num: number): void {
     this.barValue += num;
-  }
-  private initSetting(): void {
-    (this.selectors! as HTMLElement[]).forEach((elem) => {
-      this.bar.max = 100;
-      if (Number(elem.style.opacity) === 0) {
-        this.bar.value = 100;
-      } else {
-        this.barValue = Number(elem.style.opacity) * 100;
-        this.bar.value = Number(elem.style.opacity) * 100;
-      }
-    });
   }
   changeSetting(): string | undefined {
     if (this.barValue < 0) {

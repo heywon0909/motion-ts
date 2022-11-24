@@ -27,8 +27,9 @@ import { TransparentControlPicker } from "./components/page/picker/transparentPi
 type InputComponentConstructor<T = (MediaData | TextData) & Component> = {
   new (): T;
 };
+
 type AttachableBtn<T extends Button> = T;
-type PastePickerConstructor<T extends Picker> = T[]|T;
+type PastePickerConstructor<T = Picker> = { new (): T };
 class App {
   private readonly page: Component & Composable;
   constructor(appRoot: HTMLElement, private dialogRoot: HTMLElement) {
@@ -36,15 +37,18 @@ class App {
     this.page.attachTo(appRoot);
 
     const colorBtn = document.querySelector("#new-color")! as HTMLElement;
+
     let elemArr: HTMLElement[] = [
       document.querySelector("header")! as HTMLElement,
       document.querySelector("footer")! as HTMLElement,
     ];
+    const color = new ColorPickerComponent();
+    color.changableTarget = elemArr;
     colorBtn.addEventListener("click", () => {
+      console.log("계속타니");
       const dialog = new InputDialog();
-      const color = new ColorPickerComponent(elemArr);
       dialog.addChild(color);
-      dialog.attachTo(dialogRoot);
+      dialog.attachTo(this.dialogRoot);
       dialog.setOnCloseListener(() => {
         color.unbindChange();
         dialog.removeFrom(this.dialogRoot);
@@ -60,7 +64,7 @@ class App {
       MediaSectionInput,
       (input: MediaSectionInput) => new ImageComponent(input.title, input.url),
       () => new ButtonComponent("setting"),
-      ()=> [ColorPickerComponent,TransparentControlPicker]
+      () => [ColorPickerComponent, TransparentControlPicker]
     );
 
     this.bindElementDialog<MediaSectionInput>(
@@ -68,7 +72,7 @@ class App {
       MediaSectionInput,
       (input: MediaSectionInput) => new VideoComponent(input.title, input.url),
       () => new ButtonComponent("setting"),
-       ()=> [ColorPickerComponent,TransparentControlPicker]
+      () => [ColorPickerComponent, TransparentControlPicker]
     );
 
     this.bindElementDialog<TextSectionInput>(
@@ -76,7 +80,7 @@ class App {
       TextSectionInput,
       (input: TextSectionInput) => new NoteComponent(input.title, input.body),
       () => new ButtonComponent("setting"),
-      ()=> [ColorPickerComponent,TransparentControlPicker]
+      () => [ColorPickerComponent, TransparentControlPicker]
     );
 
     this.bindElementDialog<TextSectionInput>(
@@ -84,7 +88,7 @@ class App {
       TextSectionInput,
       (input: TextSectionInput) => new TodoComponent(input.title, input.body),
       () => new ButtonComponent("setting"),
-      ()=> [ColorPickerComponent,TransparentControlPicker]
+      () => [ColorPickerComponent, TransparentControlPicker]
     );
 
     // For demo :)
@@ -109,55 +113,13 @@ class App {
     );
     this.page.addChild(new TodoComponent("Todo Title", "TypeScript Course!"));
   }
-  // PICKER 버튼 넣기
-  private bindPickerBtn<T extends Button>(
-    AttachblePickerButton: AttachableBtn<T>,
-    makePicker: () => PastePickerConstructor
-  ) {
-    const settingBtn = AttachblePickerButton;
- 
-    settingBtn.setOnModalListener(() => {
-      const picker_dialog = new InputDialog();
 
-      const pickerItems = makePicker();
-
-      picker_dialog.attachTo(this.dialogRoot);
-      picker_dialog.addChild(...pickerItems);
-      picker_dialog.setOnCloseListener(() => {
-        pickerItems.forEach((picker) => {
-          picker.unbindChange();
-        });
-        picker_dialog.removeFrom(this.dialogRoot);
-      });
-
-      picker_dialog.setOnSubmitListener(() => {
-        let alert: string[] = [];
-        pickerItems.forEach((picker) => {
-          const change = picker.changeSetting();
-          if (change != undefined) {
-            alert.push(change! as string);
-          }
-        });
-
-        if (alert[0] == undefined) {
-          picker_dialog.removeFrom(this.dialogRoot);
-        } else {
-          const alert_dialog = new AlertDialog(alert);
-          alert_dialog.attachTo(document.body);
-          alert_dialog.setOnCloseListener(() => {
-            alert_dialog.removeFrom(document.body);
-          });
-          alert = [];
-        }
-      });
-    });
-  }
   private bindElementDialog<T extends (MediaData | TextData) & Component>(
     selector: string,
     InputComponent: InputComponentConstructor<T>,
     makeSection: (input: T) => Component,
     makeFilter: () => AttachableBtn<Button>,
-    makePicker: () => PastePickerConstructor<Picker>
+    makePicker: () => PastePickerConstructor<Picker>[]
   ) {
     const element = document.querySelector(selector)! as HTMLElement;
     element.addEventListener("click", () => {
@@ -180,28 +142,51 @@ class App {
         }
         const elem = makeSection(input);
         const pickerBtn = makeFilter();
+        console.log("pickerBtn", pickerBtn);
         this.page.addChild(elem, pickerBtn);
         const pickerConstructor = makePicker();
-     
+        console.log("pickerCon", pickerConstructor);
+        let bindPickerList: Picker[] = [];
+        pickerConstructor.forEach((picker) => {
+          bindPickerList.push(new picker());
+        });
 
-        this.bindPickerBtn<Button>(pickerBtn, () => [
-          new ColorPickerComponent([elem.rootElement]),
-          new TransparentControlPicker([elem.rootElement]),
-        ]);
-        // this.page.addChild(elem, colorBtn);
-        // colorBtn.setOnModalListener(() => {
-        //   const picker_dialog = new InputDialog();
-        //   const color = new ColorPickerComponent([elem.rootElement]);
-        //   picker_dialog.addChild(color);
-        //   picker_dialog.attachTo(this.dialogRoot);
-        //   picker_dialog.setOnCloseListener(() => {
-        //     picker_dialog.removeFrom(this.dialogRoot);
-        //   });
-        //   picker_dialog.setOnSubmitListener(() => {
-        //     color.changeSetting();
-        //     picker_dialog.removeFrom(this.dialogRoot);
-        //   });
-        // });
+        bindPickerList.forEach((picker) => {
+          picker.changableTarget = [elem.rootElement];
+        });
+
+        pickerBtn.setOnModalListener(() => {
+          const picker_dialog = new InputDialog();
+          picker_dialog.addChild(bindPickerList);
+          picker_dialog.attachTo(this.dialogRoot);
+          picker_dialog.setOnCloseListener(() => {
+            bindPickerList.forEach((picker) => {
+              picker.unbindChange();
+            });
+            picker_dialog.removeFrom(this.dialogRoot);
+          });
+          picker_dialog.setOnSubmitListener(() => {
+            let alert: string[] = [];
+            bindPickerList.forEach((picker) => {
+              const change = picker.changeSetting();
+              if (change != null) {
+                alert.push(change! as string);
+              }
+            });
+
+            if (alert[0] == undefined) {
+              picker_dialog.removeFrom(this.dialogRoot);
+            } else {
+              const alert_dialog = new AlertDialog(alert);
+              alert_dialog.attachTo(this.dialogRoot);
+              alert_dialog.setOnCloseListener(() => {
+                alert_dialog.removeFrom(this.dialogRoot);
+              });
+              alert = [];
+            }
+          });
+        });
+
         dialog.removeFrom(this.dialogRoot);
       });
     });
