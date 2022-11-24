@@ -332,7 +332,6 @@ image__holder {
   height: 40px;
   margin-top: 10px;
   text-align: center;
-  src: url("../assets/alert.png");
 }
 .dialog.alert {
   z-index: 9999;
@@ -348,14 +347,13 @@ image__holder {
 }
 
 @keyframes drag_start {
-  0%{
+  0% {
     opacity: 1;
   }
-  100%{
+  100% {
     opacity: 0.2;
   }
-  
 }
-.drop-area{
+.drop-area {
   border: 2px solid var(--accent-color);
 }

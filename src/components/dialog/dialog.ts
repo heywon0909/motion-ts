@@ -66,7 +66,7 @@ export class AlertDialog extends BaseComponent<HTMLElement> {
     super(`<section class="dialog alert">
         <div class="dialog__container">
         <div id="dialog__body">
-        <img class="alert__icon"/>
+        <img class="alert__icon" src="../assets/alert.png"/>
         <p></p>
         </div>
         </div>
